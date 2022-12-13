@@ -1,1 +1,46 @@
-<p>add-question-modal works!</p>
+<button type="button" class="close btn-close pull-right ms-auto" (click)="hideModal()"></button>
+<div class="box d-flex flex-column h-100">
+    <h4 class="heading">Add a New Questions</h4>
+    <form [formGroup]="editForm" class="mt-3">
+        <div class="row-input d-flex align-items-center justify-content-between mb-3">
+            <span class="required col-4">Type of question:</span>
+            <select formControlName="questionType" class="control-input form-select">
+                <option *ngFor="let type of listQuestionType" [value]="type?.id">{{type?.label}}</option>
+            </select>
+        </div>
+        <div class="row-input d-flex align-items-center justify-content-between mb-3">
+            <span class="required col-4">Content of question:</span>
+            <textarea [maxlength]="maxLengthContent" placeholder="Fill content of question" rows="2"
+                class="control-input w-100 form-control" formControlName="questionContent"> </textarea>
+        </div>
+        <ng-container *ngIf="editForm?.get('questionType')?.value === questionTypeEnum.CHECKBOX">
+            <div class="row-input d-flex align-items-center justify-content-between mb-2"
+                formArrayName="childrenAnswers"
+                *ngFor="let option of editForm?.get('childrenAnswers')?.value; let i = index;">
+                <ng-container [formGroupName]="i">
+                    <span class="required col-4">Option {{i + 1}}:</span>
+                    <input placeholder="Fill content of option" class="control-input w-100 form-control"
+                        formControlName="content" />
+                </ng-container>
+
+            </div>
+            <div class="row-input d-flex align-items-center mb-3" *ngIf="renderAddMoreButton()">
+                <span class="col-4"></span>
+                <a class="add-more" (click)="addOption()">+ Add another answer</a>
+            </div>
+            <div class="row-input d-flex align-items-center mb-2">
+                <input class="form-check-input cursor-pointer" type="checkbox" formControlName="required"
+                    id="checkAllowOther">
+                <label for="checkAllowOther" class="ms-2 cursor-pointer">Allow user to specify their own answer</label>
+            </div>
+        </ng-container>
+        <div class="row-input d-flex align-items-center mb-3">
+            <input class="form-check-input cursor-pointer" type="checkbox" formControlName="required"
+                id="checkRequired">
+            <label for="checkRequired" class="ms-2 cursor-pointer">This field is required</label>
+        </div>
+    </form>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-success d-fle">Submit</button>
+    </div>
+</div>
